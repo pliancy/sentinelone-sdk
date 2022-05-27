@@ -1,0 +1,64 @@
+{
+    "author": {
+        "name": "Justin",
+        "email": "justin.mcmahon@pliancy.com"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/@digitalroute/cz-conventional-changelog-for-jira",
+            "skipScope": false
+        }
+    },
+    "dependencies": {
+        "axios": "0.27.2",
+        "tslib": "2.3.0"
+    },
+    "description": "A TypeScript SDK for the SentinelOne API",
+    "devDependencies": {
+        "@digitalroute/cz-conventional-changelog-for-jira": "7.3.0",
+        "@pliancy/eslint-config-ts": "0.0.5",
+        "@pliancy/semantic-release-config-npm": "2.2.0",
+        "@types/jest": "27.5.1",
+        "@types/node": "17.0.35",
+        "commitizen": "4.2.4",
+        "cpy-cli": "4.1.0",
+        "husky": "8.0.1",
+        "jest": "28.1.0",
+        "jest-mock-axios": "4.6.1",
+        "npm-run-all": "4.1.5",
+        "open-cli": "7.0.1",
+        "pinst": "3.0.0",
+        "rimraf": "3.0.2",
+        "ts-jest": "28.0.3",
+        "typescript": "4.7.2"
+    },
+    "engines": {
+        "node": ">=16"
+    },
+    "homepage": "https://github.com/pliancy/sentinelone-sdk",
+    "keywords": [],
+    "license": "MIT",
+    "main": "src/index.ts",
+    "name": "@pliancy/sentinelone-sdk",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/pliancy/sentinelone-sdk"
+    },
+    "scripts": {
+        "build": "run-s -l clean test tsc copy",
+        "build:check": "tsc --noEmit",
+        "clean": "rimraf coverage dist tmp",
+        "copy": "pinst --disable && cpy package.json dist && cpy README.md dist && pinst --enable",
+        "lint": "eslint \"src/**/*.ts\" --fix",
+        "postinstall": "husky install",
+        "qa": "run-s -l lint test clean build:check",
+        "semantic-release": "semantic-release",
+        "test": "jest",
+        "tsc": "tsc -p tsconfig.build.json"
+    },
+    "version": "0.0.0",
+    "volta": {
+        "node": "16.15.0",
+        "yarn": "1.22.18"
+    }
+}
