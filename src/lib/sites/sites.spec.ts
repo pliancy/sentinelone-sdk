@@ -19,6 +19,9 @@ describe('Sites', () => {
     it('gets all sites', async () => {
         const data = {
             data: { sites: [site] },
+            pagination: {
+                nextCursor: null,
+            },
         }
 
         jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })

@@ -43,7 +43,7 @@ describe('Agents', () => {
         const res = agents.getBySiteId('1')
         await expect(res).resolves.toEqual([agent])
         expect(mockAxios.get).toHaveBeenCalledWith('agents', {
-            params: { siteIds: '1' },
+            params: { siteIds: '1', cursor: null, limit: 100 },
         })
     })
 

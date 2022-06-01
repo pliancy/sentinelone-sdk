@@ -7,21 +7,22 @@ export const paginatedRequest = async (
     nestedKey?: string,
 ): Promise<any[]> => {
     let data = []
-    let lastResult: any
+    let nextCursor = null
     do {
-        const params: any = {}
-        if (lastResult?.data?.pagination?.nextCursor)
-            params.cursor = lastResult.data.pagination.nextCursor
+        const newConfig: AxiosRequestConfig = {
+            ...config,
+            params: { ...config.params, ...{ cursor: nextCursor, limit: 100 } },
+        }
 
-        const { data: res } = await httpAgent.get(route, config)
+        const { data: res } = await httpAgent.get(route, newConfig)
         if (nestedKey) {
             data.push(...res.data[nestedKey])
         } else {
             data.push(...res.data)
         }
 
-        lastResult = res
-    } while (lastResult?.data?.pagination?.nextCursor)
+        nextCursor = res?.pagination?.nextCursor || null
+    } while (nextCursor)
 
     return data
 }
