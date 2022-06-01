@@ -7,5 +7,11 @@ export function createHttpAgent(config: SentinelOneConfig): AxiosInstance {
     const Authorization = `ApiToken ${config.token}`
     const agent = axios.create({ baseURL })
     agent.defaults.headers.common['Authorization'] = Authorization
+    agent.interceptors.response.use((res) => {
+        if (res?.data?.errors) {
+            throw new Error(res.data.errors.join(', '))
+        }
+        return res
+    })
     return agent
 }
