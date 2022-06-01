@@ -15,7 +15,10 @@ export interface Response<T> {
     errors: {
         type: string
     }[]
-    data: {
-        [P in keyof ResponseProps]: T | T[]
-    }
+    data:
+        | {
+              [P in keyof ResponseProps]: T | T[]
+          }
+        | T[]
+        | T
 }

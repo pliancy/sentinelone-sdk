@@ -12,8 +12,8 @@ export interface Site {
     unlimitedLicenses?: boolean
     accountId?: string
     suite: Suite
-    totalLicenses: number
-    sku: Suite
+    totalLicenses?: number
+    sku?: Suite
 }
 
 export interface License {
