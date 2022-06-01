@@ -14,7 +14,7 @@ describe('HttpAgent', () => {
 
     afterEach(() => {
         expect(mockAxios.create).toHaveBeenCalledWith({
-            baseURL: `https://${conf.site}/web/api/v2.0`,
+            baseURL: `https://${conf.site}/web/api/v2.1`,
         })
         expect(mockAxios.defaults.headers.common['Authorization']).toEqual('ApiToken token')
     })

@@ -1,32 +1,27 @@
-import { AxiosInstance } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 export const paginatedRequest = async (
     httpAgent: AxiosInstance,
     route: string,
-    filter?: { [index: string]: any },
+    config: AxiosRequestConfig = {},
+    nestedKey?: string,
 ): Promise<any[]> => {
-    const params = {
-        per_page: 100,
-        page: 1,
-    }
+    let data = []
+    let lastResult: any
+    do {
+        const params: any = {}
+        if (lastResult?.data?.pagination?.nextCursor)
+            params.cursor = lastResult.data.pagination.nextCursor
 
-    if (filter) Object.assign(params, { ...filter })
+        const { data: res } = await httpAgent.get(route, config)
+        if (nestedKey) {
+            data.push(...res.data[nestedKey])
+        } else {
+            data.push(...res.data)
+        }
 
-    const res = await httpAgent.get(route, {
-        params,
-    })
-    const totalCount = Number(res.headers['x-total-count'] as string)
-    const pages = Math.ceil(totalCount / 100)
-    const data = res.data
-
-    for (let i = 1; i < pages; i++) {
-        Object.assign(params, { page: i + 1 })
-
-        const { data: resData } = await httpAgent.get(route, {
-            params,
-        })
-        data.push(...resData)
-    }
+        lastResult = res
+    } while (lastResult?.data?.pagination?.nextCursor)
 
     return data
 }

@@ -1,16 +1,29 @@
 import { AxiosInstance } from 'axios'
+import { paginatedRequest } from '../utils/paginated-request'
 import { Site } from './sites.types'
-import { Response } from '../sentinel-one.types'
 
 export class Sites {
-    constructor(private readonly agent: AxiosInstance) {}
+    constructor(private readonly httpAgent: AxiosInstance) {}
 
     async getAll(): Promise<Site[]> {
-        const { data: res } = await this.agent.get<Response<Site>>('sites')
-        // TODO: figure out what errors actually look like and do something meaningful with them
-        if (res.errors) {
-            throw new Error(res.errors.join(', '))
-        }
-        return res.data.sites as Site[]
+        return paginatedRequest(this.httpAgent, 'sites', {}, 'sites')
+    }
+    async create(site: Site): Promise<Site> {
+        const { data: res } = await this.httpAgent.post('sites', { data: site })
+        return res.data
+    }
+
+    async getById(id: string): Promise<Site> {
+        const { data: res } = await this.httpAgent.get('sites', { params: { siteIds: id } })
+        return res.data.sites[0] as Site
+    }
+
+    async update(id: string, site: Site): Promise<Site> {
+        const { data: res } = await this.httpAgent.put(`sites/${id}`, { data: site })
+        return res.data
+    }
+
+    async delete(id: string): Promise<void> {
+        await this.httpAgent.delete(`sites/${id}`)
     }
 }
