@@ -59,8 +59,8 @@ describe('Agents', () => {
     })
 
     it('should initiate scan by uuid', async () => {
-        jest.spyOn(mockAxios, 'post').mockResolvedValue({})
-        await agents.initiateScanByUuid('1')
+        jest.spyOn(mockAxios, 'post').mockResolvedValue({ data: {} })
+        await agents.initiateScanById('1')
         expect(mockAxios.post).toHaveBeenCalledWith('agents/scan', {
             filter: { uuid: '1' },
         })
