@@ -1,7 +1,6 @@
 import { AxiosInstance } from 'axios'
 import { paginatedRequest } from '../utils/paginated-request'
 import { Site } from './sites.types'
-import { S1ErrorResponse } from '../sentinel-one.types'
 
 export class Sites {
     constructor(private readonly httpAgent: AxiosInstance) {}
@@ -10,7 +9,7 @@ export class Sites {
         return paginatedRequest(this.httpAgent, 'sites', {}, 'sites')
     }
 
-    async create(site: Site): Promise<Site | S1ErrorResponse> {
+    async create(site: Site): Promise<Site> {
         const { data: res } = await this.httpAgent.post('sites', { data: site })
         return res.data
     }
