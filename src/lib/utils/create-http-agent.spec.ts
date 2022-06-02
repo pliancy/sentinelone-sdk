@@ -22,4 +22,12 @@ describe('HttpAgent', () => {
     it('creates an axios instance', () => {
         expect(instance).toBeTruthy()
     })
+
+    it('sets the Authorization header', () => {
+        expect(mockAxios.defaults.headers.common['Authorization']).toEqual('ApiToken token')
+    })
+
+    it('uses interceptors', () => {
+        expect(mockAxios.interceptors.response).toBeTruthy()
+    })
 })
