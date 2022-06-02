@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios'
+
 export interface SentinelOneConfig {
     site: string
     token: string
@@ -12,13 +14,19 @@ export interface Response<T> {
         nextCursor: string
         totalItems: number
     }
-    errors: {
-        type: string
-    }[]
+    errors: S1ApiError[]
     data:
         | {
-              [P in keyof ResponseProps]: T | T[]
-          }
+        [P in keyof ResponseProps]: T | T[]
+    }
         | T[]
         | T
 }
+
+export interface S1ApiError {
+    code: number
+    detail: string
+    title: string
+}
+
+export type S1ErrorResponse = (AxiosResponse & { response: { data: { errors: S1ApiError[] } } })

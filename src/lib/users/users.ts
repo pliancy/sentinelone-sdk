@@ -3,7 +3,8 @@ import { paginatedRequest } from '../utils/paginated-request'
 import { User } from './users.types'
 
 export class Users {
-    constructor(private readonly httpAgent: AxiosInstance) {}
+    constructor(private readonly httpAgent: AxiosInstance) {
+    }
 
     async getAll(): Promise<User[]> {
         return paginatedRequest(this.httpAgent, 'users')
@@ -14,7 +15,7 @@ export class Users {
         return res.data
     }
 
-    async getByEmail(email: string): Promise<User[]> {
+    async getByEmail(email: string): Promise<User> {
         const { data: res } = await this.httpAgent.get('users', { params: { email } })
         return res.data[0]
     }
@@ -28,7 +29,7 @@ export class Users {
         return res.data
     }
 
-    async update(id: string, user: User): Promise<User> {
+    async update(id: string, user: Partial<User>): Promise<User> {
         const { data: res } = await this.httpAgent.put(`users/${id}`, { data: user })
         return res.data
     }

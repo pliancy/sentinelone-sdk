@@ -13,7 +13,7 @@ export interface User {
     lastLogin?: Date
     lowestRole?: string
     primaryTwoFaMethod?: string
-    scope: 'Site' | 'Account' | 'Tenant'
+    scope: 'site' | 'account' | 'tenant'
     scopeRoles?: ScopeRole[]
     siteRoles?: any[]
     source?: string
