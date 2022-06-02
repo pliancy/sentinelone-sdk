@@ -4,8 +4,7 @@ import { Site } from './sites.types'
 import { S1ErrorResponse } from '../sentinel-one.types'
 
 export class Sites {
-    constructor(private readonly httpAgent: AxiosInstance) {
-    }
+    constructor(private readonly httpAgent: AxiosInstance) {}
 
     async getAll(): Promise<Site[]> {
         return paginatedRequest(this.httpAgent, 'sites', {}, 'sites')

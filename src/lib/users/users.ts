@@ -3,8 +3,7 @@ import { paginatedRequest } from '../utils/paginated-request'
 import { User } from './users.types'
 
 export class Users {
-    constructor(private readonly httpAgent: AxiosInstance) {
-    }
+    constructor(private readonly httpAgent: AxiosInstance) {}
 
     async getAll(): Promise<User[]> {
         return paginatedRequest(this.httpAgent, 'users')

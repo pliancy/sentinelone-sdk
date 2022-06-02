@@ -17,8 +17,8 @@ export interface Response<T> {
     errors: S1ApiError[]
     data:
         | {
-        [P in keyof ResponseProps]: T | T[]
-    }
+              [P in keyof ResponseProps]: T | T[]
+          }
         | T[]
         | T
 }
@@ -29,4 +29,4 @@ export interface S1ApiError {
     title: string
 }
 
-export type S1ErrorResponse = (AxiosResponse & { response: { data: { errors: S1ApiError[] } } })
+export type S1ErrorResponse = AxiosResponse & { response: { data: { errors: S1ApiError[] } } }
