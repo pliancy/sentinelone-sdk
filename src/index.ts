@@ -1,3 +1,6 @@
 export { SentinelOne } from './lib/sentinel-one'
-export * from './lib/sentinel-one.types'
+export * from './lib/agents/agents.types'
+export * from './lib/roles/roles.types'
 export * from './lib/sites/sites.types'
+export * from './lib/users/users.types'
+export * from './lib/sentinel-one.types'
