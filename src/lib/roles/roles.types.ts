@@ -1,6 +1,6 @@
 export interface Role {
-    accountName?: null
-    createdAt?: null
+    accountName?: string
+    createdAt?: string
     creator?: string
     description: string
     id?: string
@@ -9,8 +9,8 @@ export interface Role {
     predefinedRole?: boolean
     scope?: string
     scopeId?: string
-    siteName?: null
-    updatedAt?: null
+    siteName?: string
+    updatedAt?: string
     usersInRoles?: number
 }
 

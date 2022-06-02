@@ -15,13 +15,25 @@ export class Agents {
 
     async getById(id: string): Promise<Agent> {
         const { data: res } = await this.httpAgent.get('agents', {
-            params: { uuid: id },
+            params: { ids: [id] },
         })
         return res.data[0] as Agent
     }
 
-    async initiateScanById(uuid: string): Promise<any> {
+    async getByUuid(uuid: string): Promise<Agent> {
+        const { data: res } = await this.httpAgent.get('agents', {
+            params: { uuid },
+        })
+        return res.data[0] as Agent
+    }
+
+    async initiateScanByUuid(uuid: string): Promise<any> {
         const { data: res } = await this.httpAgent.post('agents/scan', { filter: { uuid } })
+        return res.data
+    }
+
+    async initiateScanById(id: string): Promise<any> {
+        const { data: res } = await this.httpAgent.post('agents/scan', { filter: { ids: [id] } })
         return res.data
     }
 }

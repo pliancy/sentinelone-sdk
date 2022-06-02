@@ -55,6 +55,17 @@ describe('Agents', () => {
         jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })
         const res = agents.getById('1')
         await expect(res).resolves.toEqual(agent)
+        expect(mockAxios.get).toHaveBeenCalledWith('agents', { params: { ids: ['1'] } })
+    })
+
+    it('should get agent by uuid', async () => {
+        const data = {
+            data: [agent],
+        }
+
+        jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })
+        const res = agents.getByUuid('1')
+        await expect(res).resolves.toEqual(agent)
         expect(mockAxios.get).toHaveBeenCalledWith('agents', { params: { uuid: '1' } })
     })
 
@@ -62,7 +73,7 @@ describe('Agents', () => {
         jest.spyOn(mockAxios, 'post').mockResolvedValue({ data: {} })
         await agents.initiateScanById('1')
         expect(mockAxios.post).toHaveBeenCalledWith('agents/scan', {
-            filter: { uuid: '1' },
+            filter: { ids: ['1'] },
         })
     })
 })
