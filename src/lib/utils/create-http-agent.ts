@@ -2,16 +2,21 @@ import axios, { AxiosInstance } from 'axios'
 import { SentinelOneConfig } from '../sentinel-one.types'
 
 export function createHttpAgent(config: SentinelOneConfig): AxiosInstance {
-    // TODO: figure out what errors actually look like and do something meaningful with them
     const baseURL = `https://${config.site}/web/api/v2.1`
     const Authorization = `ApiToken ${config.token}`
     const agent = axios.create({ baseURL })
     agent.defaults.headers.common['Authorization'] = Authorization
-    agent.interceptors.response.use((res) => {
-        if (res?.data?.errors) {
-            throw new Error(res.data.errors.join(', '))
-        }
-        return res
-    })
+
+    // On Axios error, throw a simple, relevant error
+    agent.interceptors.response.use(
+        (res) => res,
+        (err) => {
+            throw {
+                status: err.response.status,
+                statusText: err.response.statusText,
+                errors: err.response.data.errors,
+            }
+        },
+    )
     return agent
 }

@@ -1,6 +1,6 @@
 export interface Site {
-    siteType: SiteType
-    description: string
+    siteType?: SiteType
+    description?: string
     licenses?: License[]
     expiration?: string
     inherits?: boolean
@@ -10,7 +10,7 @@ export interface Site {
     name: string
     externalId?: string
     unlimitedLicenses?: boolean
-    accountId?: string
+    accountId: string
     suite: Suite
     totalLicenses?: number
     sku?: Suite
