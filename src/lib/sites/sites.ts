@@ -25,6 +25,7 @@ export class Sites {
     }
 
     async delete(id: string): Promise<void> {
-        await this.httpAgent.delete(`sites/${id}`)
+        const { data: res } = await this.httpAgent.delete(`sites/${id}`)
+        return res.data
     }
 }

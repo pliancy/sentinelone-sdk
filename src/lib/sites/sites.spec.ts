@@ -59,7 +59,7 @@ describe('Sites', () => {
     })
 
     it('deletes a site', async () => {
-        jest.spyOn(mockAxios, 'delete').mockResolvedValue({})
+        jest.spyOn(mockAxios, 'delete').mockResolvedValue({ data: {} })
         await sites.delete('123')
         expect(mockAxios.delete).toHaveBeenCalledWith('sites/123')
     })
