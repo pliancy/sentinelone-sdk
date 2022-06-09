@@ -39,7 +39,7 @@ export class Sites {
                 state: 'active',
             },
         })
-        return res.sites
+        return res.data.sites
     }
 
     async getByName(name: string): Promise<Site[]> {
@@ -49,7 +49,7 @@ export class Sites {
                 state: 'active',
             },
         })
-        return res.sites[0]
+        return res.data.sites[0]
     }
 
     async update(id: string, data: Partial<Site>): Promise<Site> {
