@@ -1,4 +1,5 @@
 export interface Site {
+    id: string
     siteType?: SiteType
     description?: string
     licenses?: License[]

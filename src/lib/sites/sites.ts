@@ -15,7 +15,7 @@ export class Sites {
             'sites',
             {
                 params: {
-                    status: 'active',
+                    state: 'active',
                 },
             },
             'sites',
@@ -28,12 +28,32 @@ export class Sites {
     }
 
     async getById(id: string): Promise<Site> {
-        const { data: res } = await this.httpAgent.get('sites', { params: { siteIds: id } })
-        return res.data.sites[0] as Site
+        const { data: res } = await this.httpAgent.get(`sites/${id}`)
+        return res.data
     }
 
-    async update(id: string, site: Site): Promise<Site> {
-        const { data: res } = await this.httpAgent.put(`sites/${id}`, { data: site })
+    async getByExternalId(id: string): Promise<Site[]> {
+        const { data: res } = await this.httpAgent.get('sites', {
+            params: {
+                externalId: id,
+                state: 'active',
+            },
+        })
+        return res.sites
+    }
+
+    async getByName(name: string): Promise<Site[]> {
+        const { data: res } = await this.httpAgent.get('sites', {
+            params: {
+                name,
+                state: 'active',
+            },
+        })
+        return res.sites[0]
+    }
+
+    async update(id: string, data: Partial<Site>): Promise<Site> {
+        const { data: res } = await this.httpAgent.put(`sites/${id}`, { data })
         return res.data
     }
 

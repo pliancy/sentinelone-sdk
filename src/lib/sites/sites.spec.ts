@@ -42,19 +42,49 @@ describe('Sites', () => {
             params: {
                 cursor: null,
                 limit: 100,
-                status: 'active',
+                state: 'active',
             },
         })
     })
 
     it('gets site by Id', async () => {
+        const site = { id: '1' }
         const data = {
-            data: { sites: [site] },
+            data: site,
         }
         jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })
-        const res = await sites.getById('123')
+        const res = await sites.getById('1')
         expect(res).toEqual(site)
-        expect(mockAxios.get).toHaveBeenCalledWith('sites', { params: { siteIds: '123' } })
+        expect(mockAxios.get).toHaveBeenCalledWith('sites/1')
+    })
+
+    it('gets site by name', async () => {
+        const site = { id: '1', name: 'Cust' }
+        jest.spyOn(mockAxios, 'get').mockResolvedValue({ data: { sites: [site] } })
+        const res = await sites.getByName('Cust')
+        expect(res).toEqual(site)
+        expect(mockAxios.get).toHaveBeenCalledWith('sites', {
+            params: {
+                name: 'Cust',
+                state: 'active',
+            },
+        })
+    })
+
+    it('gets sites by externalId', async () => {
+        const s = [
+            { id: '1', externalId: 'CUST' },
+            { id: '2', externalId: 'CUST' },
+        ]
+        jest.spyOn(mockAxios, 'get').mockResolvedValue({ data: { sites: s } })
+        const res = await sites.getByExternalId('CUST')
+        expect(res).toEqual(s)
+        expect(mockAxios.get).toHaveBeenCalledWith('sites', {
+            params: {
+                externalId: 'CUST',
+                state: 'active',
+            },
+        })
     })
 
     it('creates a site', async () => {
