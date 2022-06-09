@@ -28,6 +28,25 @@ describe('Sites', () => {
         await expect(sites.getAll()).resolves.toEqual([site])
     })
 
+    it('gets active sites', async () => {
+        const data = {
+            data: { sites: [site] },
+            pagination: {
+                nextCursor: null,
+            },
+        }
+
+        jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })
+        await expect(sites.getActive()).resolves.toEqual([site])
+        expect(mockAxios.get).toHaveBeenCalledWith('sites', {
+            params: {
+                cursor: null,
+                limit: 100,
+                status: 'active',
+            },
+        })
+    })
+
     it('gets site by Id', async () => {
         const data = {
             data: { sites: [site] },
