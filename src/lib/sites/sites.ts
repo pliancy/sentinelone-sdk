@@ -22,7 +22,7 @@ export class Sites {
         )
     }
 
-    async create(site: Site): Promise<Site> {
+    async create(site: Partial<Site>): Promise<Site> {
         const { data: res } = await this.httpAgent.post('sites', { data: site })
         return res.data
     }
