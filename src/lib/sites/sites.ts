@@ -42,7 +42,7 @@ export class Sites {
         return res.data.sites
     }
 
-    async getByName(name: string): Promise<Site[]> {
+    async getByName(name: string): Promise<Site> {
         const { data: res } = await this.httpAgent.get('sites', {
             params: {
                 name,
