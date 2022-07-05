@@ -1,3 +1,5 @@
 {
-  "extends": ["github>my-org/.github"]
+  "extends": [
+    "github>pliancy/.github"
+  ]
 }
