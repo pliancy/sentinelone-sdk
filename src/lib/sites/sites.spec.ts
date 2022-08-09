@@ -72,11 +72,8 @@ describe('Sites', () => {
     })
 
     it('gets sites by externalId', async () => {
-        const s = [
-            { id: '1', externalId: 'CUST' },
-            { id: '2', externalId: 'CUST' },
-        ]
-        jest.spyOn(mockAxios, 'get').mockResolvedValue({ data: { data: { sites: s } } })
+        const s = { id: '1', externalId: 'CUST' }
+        jest.spyOn(mockAxios, 'get').mockResolvedValue({ data: { data: { sites: [s] } } })
         const res = await sites.getByExternalId('CUST')
         expect(res).toEqual(s)
         expect(mockAxios.get).toHaveBeenCalledWith('sites', {

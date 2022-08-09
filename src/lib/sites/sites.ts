@@ -32,14 +32,14 @@ export class Sites {
         return res.data
     }
 
-    async getByExternalId(id: string): Promise<Site[]> {
+    async getByExternalId(id: string): Promise<Site> {
         const { data: res } = await this.httpAgent.get('sites', {
             params: {
                 externalId: id,
                 state: 'active',
             },
         })
-        return res.data.sites
+        return res.data.sites[0]
     }
 
     async getByName(name: string): Promise<Site> {
