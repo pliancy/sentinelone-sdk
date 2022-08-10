@@ -38,7 +38,7 @@
     "homepage": "https://github.com/pliancy/sentinelone-sdk",
     "keywords": [],
     "license": "MIT",
-    "main": "src/index.ts",
+    "main": "index.js",
     "name": "@pliancy/sentinelone-sdk",
     "repository": {
         "type": "git",
