@@ -6,7 +6,12 @@ export class Roles {
     constructor(private readonly httpAgent: AxiosInstance) {}
 
     async getAll(): Promise<Role[]> {
-        return paginatedRequest(this.httpAgent, 'rbac/roles')
+        return paginatedRequest(this.httpAgent, 'rbac/roles', {
+            params: {
+                includeChildren: true,
+                includeParents: true,
+            },
+        })
     }
 
     async getById(id: string): Promise<Role> {
@@ -15,7 +20,9 @@ export class Roles {
     }
 
     async getByName(name: string): Promise<Role> {
-        const { data: res } = await this.httpAgent.get('rbac/roles', { params: { name } })
+        const { data: res } = await this.httpAgent.get('rbac/roles', {
+            params: { name, includeChildren: true, includeParents: true },
+        })
         return res.data[0]
     }
 }

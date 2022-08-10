@@ -41,7 +41,9 @@ describe('Roles', () => {
         jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })
         const res = roles.getByName('role')
         await expect(res).resolves.toEqual(role)
-        expect(mockAxios.get).toHaveBeenCalledWith('rbac/roles', { params: { name: 'role' } })
+        expect(mockAxios.get).toHaveBeenCalledWith('rbac/roles', {
+            params: { name: 'role', includeChildren: true, includeParents: true },
+        })
     })
 
     it('should get roles by id', async () => {
