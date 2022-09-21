@@ -18,10 +18,10 @@ export class Settings {
             params.siteIds = filter.siteIds
         }
 
-        const { data } = await this.httpAgent.get('/settings/recipients', {
+        const { data: res } = await this.httpAgent.get('/settings/recipients', {
             params,
         })
-        return data
+        return res.data
     }
 
     async setNotificationRecipient(

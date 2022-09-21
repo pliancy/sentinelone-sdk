@@ -19,7 +19,7 @@ describe('Settings', () => {
 
     it('should get all notification recipients', async () => {
         const recipients = [recipient]
-        jest.spyOn(mockAxios, 'get').mockResolvedValue({ data: recipients })
+        jest.spyOn(mockAxios, 'get').mockResolvedValue({ data: { data: recipients } })
         const result = await settings.getAllNotificationRecipients({
             siteIds: ['1'],
             accountIds: ['1'],
