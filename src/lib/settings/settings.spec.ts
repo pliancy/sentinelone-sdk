@@ -40,4 +40,10 @@ describe('Settings', () => {
             filter: { siteIds: ['1'] },
         })
     })
+
+    it('should delete notification recipient', async () => {
+        jest.spyOn(mockAxios, 'delete').mockResolvedValue({ data: { data: recipient } })
+        await expect(settings.deleteNotificationRecipient('1')).resolves.toBe(recipient)
+        expect(mockAxios.delete).toHaveBeenCalledWith('/settings/recipients/1')
+    })
 })

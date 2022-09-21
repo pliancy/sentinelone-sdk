@@ -29,12 +29,15 @@ export class Settings {
         filter?: { siteIds?: string[]; accountIds?: string[] },
     ): Promise<void> {
         const body: Record<string, unknown> = { data: recipient }
-
         if (filter) {
             body.filter = filter
         }
-
         const { data: res } = await this.httpAgent.put('/settings/recipients', body)
+        return res.data
+    }
+
+    async deleteNotificationRecipient(recipientId: string): Promise<void> {
+        const { data: res } = await this.httpAgent.delete(`/settings/recipients/${recipientId}`)
         return res.data
     }
 }
