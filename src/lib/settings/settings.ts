@@ -34,7 +34,7 @@ export class Settings {
             body.filter = filter
         }
 
-        const { data } = await this.httpAgent.put('/settings/recipients', body)
-        return data
+        const { data: res } = await this.httpAgent.put('/settings/recipients', body)
+        return res.data
     }
 }

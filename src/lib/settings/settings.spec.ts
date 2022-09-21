@@ -31,7 +31,7 @@ describe('Settings', () => {
     })
 
     it('should set notification recipient', async () => {
-        jest.spyOn(mockAxios, 'put').mockResolvedValue({ data: recipient })
+        jest.spyOn(mockAxios, 'put').mockResolvedValue({ data: { data: recipient } })
         await expect(
             settings.setNotificationRecipient(recipient, { siteIds: ['1'] }),
         ).resolves.toBe(recipient)
