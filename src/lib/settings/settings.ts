@@ -9,12 +9,15 @@ export class Settings {
         accountIds?: string[]
     }): Promise<Recipient[]> {
         const params: Record<string, unknown> = {}
+
         if (filter?.accountIds) {
             params.accountIds = filter.accountIds
         }
+
         if (filter?.siteIds) {
             params.siteIds = filter.siteIds
         }
+
         const { data } = await this.httpAgent.get('/settings/recipients', {
             params,
         })
@@ -26,9 +29,11 @@ export class Settings {
         filter?: { siteIds?: string[]; accountIds?: string[] },
     ): Promise<void> {
         const body: Record<string, unknown> = { data: recipient }
+
         if (filter) {
             body.filter = filter
         }
+
         const { data } = await this.httpAgent.put('/settings/recipients', body)
         return data
     }
