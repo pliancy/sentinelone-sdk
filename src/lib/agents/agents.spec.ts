@@ -93,7 +93,7 @@ describe('Agents', () => {
         })
     })
 
-    it('should get latest GA packages by platform', async () => {
+    it('should get latest OS packages by platform', async () => {
         const packages = [
             {
                 id: '1',
@@ -132,7 +132,7 @@ describe('Agents', () => {
         }
 
         jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })
-        const res = await agents.getGAPlatformPackages()
+        const res = await agents.getOsPackages()
         expect(mockAxios.get).toHaveBeenCalledWith('update/agent/packages', {
             params: {
                 cursor: null,

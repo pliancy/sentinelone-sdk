@@ -43,7 +43,11 @@ export class Agents {
         })
     }
 
-    async getGAPlatformPackages() {
+    /**
+     * Gets the latest GA Packages for MacOs, Windows 32 and Windows 64
+     */
+
+    async getOsPackages() {
         const packages = await this.getAllPackages()
 
         return {
