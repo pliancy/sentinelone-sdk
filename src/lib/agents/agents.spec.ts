@@ -1,7 +1,7 @@
 import mockAxios from 'jest-mock-axios'
 import { AxiosInstance } from 'axios'
 import { Agents } from './agents'
-import { Agent } from './agents.types'
+import { Agent, Package } from './agents.types'
 
 describe('Agents', () => {
     let agents: Agents
@@ -90,6 +90,61 @@ describe('Agents', () => {
         await agents.getAllPackages()
         expect(mockAxios.get).toHaveBeenCalledWith('update/agent/packages', {
             params: { cursor: null, limit: 100, sortBy: 'createdAt', sortOrder: 'desc' },
+        })
+    })
+
+    it('should get latest GA packages by platform', async () => {
+        const packages = [
+            {
+                id: '1',
+                version: '1.0.0',
+                minorVersion: 'GA',
+                majorVersion: '1',
+                osArch: '64 bit',
+                osType: 'windows',
+                fileExtension: '.msi',
+            },
+            {
+                id: '2',
+                version: '1.0.0',
+                minorVersion: 'GA',
+                majorVersion: '1',
+                osArch: '32 bit',
+                osType: 'windows',
+                fileExtension: '.msi',
+            },
+            {
+                id: '3',
+                version: '1.0.0',
+                minorVersion: 'GA',
+                majorVersion: '1',
+                osArch: '32/64 bit',
+                osType: 'macos',
+                fileExtension: '.pkg',
+            },
+        ] as Package[]
+        const data = {
+            data: packages,
+            pagination: {
+                nextCursor: null,
+                totalItems: 0,
+            },
+        }
+
+        jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })
+        const res = await agents.getGAPlatformPackages()
+        expect(mockAxios.get).toHaveBeenCalledWith('update/agent/packages', {
+            params: {
+                cursor: null,
+                limit: 100,
+                sortBy: 'createdAt',
+                sortOrder: 'desc',
+            },
+        })
+        expect(res).toEqual({
+            macos: packages[2],
+            'windows-64': packages[0],
+            'windows-32': packages[1],
         })
     })
 })

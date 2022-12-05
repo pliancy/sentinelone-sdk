@@ -47,7 +47,10 @@ export class Agents {
         const packages = await this.getAllPackages()
 
         return {
-            macos: packages.find((p) => p.osType === 'macos' && p.minorVersion === 'GA'),
+            macos: packages.find(
+                (p) =>
+                    p.osType === 'macos' && p.minorVersion === 'GA' && p.fileExtension === '.pkg',
+            ),
             'windows-64': packages.find(
                 (p) =>
                     p.osType === 'windows' &&
