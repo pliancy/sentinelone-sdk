@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios'
-import { Agent } from './agents.types'
+import { Agent, Package } from './agents.types'
 import { paginatedRequest } from '../utils/paginated-request'
 
 export class Agents {
@@ -35,5 +35,40 @@ export class Agents {
     async initiateScanById(id: string): Promise<any> {
         const { data: res } = await this.httpAgent.post('agents/scan', { filter: { ids: [id] } })
         return res.data
+    }
+
+    async getAllPackages(): Promise<Package[]> {
+        return paginatedRequest(this.httpAgent, 'update/agent/packages', {
+            params: { sortBy: 'createdAt', sortOrder: 'desc' },
+        })
+    }
+
+    /**
+     * Gets the latest GA Packages for MacOs, Windows 32 and Windows 64
+     */
+
+    async getOsPackages() {
+        const packages = await this.getAllPackages()
+
+        return {
+            macos: packages.find(
+                (p) =>
+                    p.osType === 'macos' && p.minorVersion === 'GA' && p.fileExtension === '.pkg',
+            ),
+            'windows-64': packages.find(
+                (p) =>
+                    p.osType === 'windows' &&
+                    p.osArch === '64 bit' &&
+                    p.fileExtension === '.msi' &&
+                    p.minorVersion === 'GA',
+            ),
+            'windows-32': packages.find(
+                (p) =>
+                    p.osType === 'windows' &&
+                    p.osArch === '32 bit' &&
+                    p.fileExtension === '.msi' &&
+                    p.minorVersion === 'GA',
+            ),
+        }
     }
 }
