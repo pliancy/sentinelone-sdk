@@ -76,4 +76,20 @@ describe('Agents', () => {
             filter: { ids: ['1'] },
         })
     })
+
+    it('should get all packages', async () => {
+        const data = {
+            data: [],
+            pagination: {
+                nextCursor: null,
+                totalItems: 0,
+            },
+        }
+
+        jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })
+        await agents.getAllPackages()
+        expect(mockAxios.get).toHaveBeenCalledWith('update/agent/packages', {
+            params: { cursor: null, limit: 100, sortBy: 'createdAt', sortOrder: 'desc' },
+        })
+    })
 })

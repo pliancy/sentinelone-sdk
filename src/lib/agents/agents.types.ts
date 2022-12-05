@@ -104,3 +104,26 @@ export interface NetworkInterface {
 export interface Tags {
     sentinelone?: any[]
 }
+
+export interface Package {
+    accounts: Array<{ id: string; name: string }>
+    createdAt: Date
+    fileExtension: string
+    fileName: string
+    fileSize: number
+    id: string
+    link: string
+    majorVersion: string
+    minorVersion: string
+    osArch: string
+    osType: string
+    packageType: string
+    platformType: string
+    rangerVersion: null
+    scopeLevel: string
+    sha1: string
+    sites: Array<{ id: string; name: string }>
+    status: string
+    updatedAt: Date
+    version: string
+}
