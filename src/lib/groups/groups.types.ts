@@ -9,11 +9,11 @@ export interface Group {
     isDefault: boolean
     name: string
     rank?: number
-    registrationToken: string
+    registrationToken?: string
     siteId: string
     totalAgents: number
     type: 'dynamic' | 'static' | 'pinned'
-    updatedAt: Date
+    updatedAt: string
 }
 
 export interface CreateGroup {
