@@ -5,14 +5,18 @@ import { CreateGroup, Group } from './groups.types'
 export class Groups {
     constructor(private readonly httpAgent: AxiosInstance) {}
 
-    async getAll(): Promise<Group[]> {
-        return paginatedRequest(this.httpAgent, 'groups', {})
-    }
-
-    async getByAccountId(accountId: string): Promise<Group[]> {
+    async getAll(siteIds?: string[]): Promise<Group[]> {
         return paginatedRequest(this.httpAgent, 'groups', {
             params: {
-                accountId,
+                siteIds: siteIds?.join(','),
+            },
+        })
+    }
+
+    async getBySiteId(siteId: string): Promise<Group[]> {
+        return paginatedRequest(this.httpAgent, 'groups', {
+            params: {
+                siteIds: siteId,
             },
         })
     }

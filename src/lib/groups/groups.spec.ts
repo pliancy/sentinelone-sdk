@@ -91,4 +91,23 @@ describe('Groups', () => {
         await groups.delete('123')
         expect(mockAxios.delete).toHaveBeenCalledWith('groups/123')
     })
+
+    it('gets groups by siteId', async () => {
+        const data = {
+            data: [group],
+            pagination: {
+                nextCursor: null,
+            },
+        }
+        jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })
+        const res = await groups.getBySiteId('123')
+        expect(res).toEqual([group])
+        expect(mockAxios.get).toHaveBeenCalledWith('groups', {
+            params: {
+                siteIds: '123',
+                limit: 100,
+                cursor: null,
+            },
+        })
+    })
 })
