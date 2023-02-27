@@ -51,21 +51,6 @@ describe('Groups', () => {
         })
     })
 
-    it('gets groups by externalId', async () => {
-        const s = [
-            { id: '1', externalId: 'CUST' },
-            { id: '2', externalId: 'CUST' },
-        ]
-        jest.spyOn(mockAxios, 'get').mockResolvedValue({ data: { data: s } })
-        const res = await groups.getByExternalId('CUST')
-        expect(res).toEqual(s)
-        expect(mockAxios.get).toHaveBeenCalledWith('groups', {
-            params: {
-                externalId: 'CUST',
-            },
-        })
-    })
-
     it('creates a group', async () => {
         const data = {
             data: group,

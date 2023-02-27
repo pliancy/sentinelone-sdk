@@ -31,15 +31,6 @@ export class Groups {
         return res.data
     }
 
-    async getByExternalId(id: string): Promise<Group[]> {
-        const { data: res } = await this.httpAgent.get('groups', {
-            params: {
-                externalId: id,
-            },
-        })
-        return res.data
-    }
-
     async getByName(name: string, siteIds?: string[]): Promise<Group> {
         const { data: res } = await this.httpAgent.get('groups', {
             params: {
