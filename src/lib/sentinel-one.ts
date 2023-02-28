@@ -7,6 +7,7 @@ import { Users } from './users/users'
 import { Roles } from './roles/roles'
 import { Accounts } from './accounts/accounts'
 import { Settings } from './settings/settings'
+import { Groups } from './groups/groups'
 
 export class SentinelOne {
     sites: Sites
@@ -15,6 +16,7 @@ export class SentinelOne {
     roles: Roles
     accounts: Accounts
     settings: Settings
+    groups: Groups
 
     private readonly httpAgent: AxiosInstance
 
@@ -26,5 +28,6 @@ export class SentinelOne {
         this.roles = new Roles(this.httpAgent)
         this.accounts = new Accounts(this.httpAgent)
         this.settings = new Settings(this.httpAgent)
+        this.groups = new Groups(this.httpAgent)
     }
 }
