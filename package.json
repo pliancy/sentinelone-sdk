@@ -33,7 +33,7 @@
         "typescript": "5.4.2"
     },
     "engines": {
-        "node": ">=14"
+        "node": ">=18"
     },
     "homepage": "https://github.com/pliancy/sentinelone-sdk",
     "keywords": [],
