@@ -11,10 +11,24 @@ export function createHttpAgent(config: SentinelOneConfig): AxiosInstance {
     agent.interceptors.response.use(
         (res) => res,
         (err) => {
+            if (err.code === 'ECONNABORTED' && err.message.includes('timeout')) {
+                throw {
+                    status: null,
+                    statusText: 'Request Timeout',
+                    errors: [
+                        {
+                            code: null,
+                            title: 'Request Timeout',
+                            detail: 'The request timed out',
+                        },
+                    ],
+                }
+            }
+
             throw {
-                status: err.response.status,
-                statusText: err.response.statusText,
-                errors: err.response.data.errors,
+                status: err?.response?.status,
+                statusText: err?.response?.statusText,
+                errors: err?.response?.data?.errors,
             }
         },
     )
