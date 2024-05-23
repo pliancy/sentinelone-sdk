@@ -3,6 +3,9 @@ import { AxiosResponse } from 'axios'
 export interface SentinelOneConfig {
     site: string
     token: string
+    /** Optional - In milliseconds
+     */
+    timeoutMs?: number
 }
 
 export type ResponseProps = {
@@ -29,4 +32,6 @@ export interface S1ApiError {
     title: string
 }
 
-export type S1ErrorResponse = AxiosResponse & { response: { data: { errors: S1ApiError[] } } }
+export type S1ErrorResponse = AxiosResponse & {
+    response: { data: { errors: S1ApiError[] } }
+}
