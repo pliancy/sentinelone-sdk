@@ -9,11 +9,13 @@ import { Accounts } from './accounts/accounts'
 import { Settings } from './settings/settings'
 import { Groups } from './groups/groups'
 import { Applications } from './applications/applications'
+import { ServiceUsers } from './service-users/service-users'
 
 export class SentinelOne {
     sites: Sites
     agents: Agents
     users: Users
+    serviceUsers: ServiceUsers
     roles: Roles
     accounts: Accounts
     settings: Settings
@@ -27,6 +29,7 @@ export class SentinelOne {
         this.sites = new Sites(this.httpAgent)
         this.agents = new Agents(this.httpAgent)
         this.users = new Users(this.httpAgent)
+        this.serviceUsers = new ServiceUsers(this.httpAgent)
         this.roles = new Roles(this.httpAgent)
         this.accounts = new Accounts(this.httpAgent)
         this.settings = new Settings(this.httpAgent)
