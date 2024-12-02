@@ -55,7 +55,9 @@ describe('Agents', () => {
         jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })
         const res = agents.getById('1')
         await expect(res).resolves.toEqual(agent)
-        expect(mockAxios.get).toHaveBeenCalledWith('agents', { params: { ids: ['1'] } })
+        expect(mockAxios.get).toHaveBeenCalledWith('agents', {
+            params: { ids: ['1'] },
+        })
     })
 
     it('should get agent by uuid', async () => {
@@ -66,7 +68,9 @@ describe('Agents', () => {
         jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })
         const res = agents.getByUuid('1')
         await expect(res).resolves.toEqual(agent)
-        expect(mockAxios.get).toHaveBeenCalledWith('agents', { params: { uuid: '1' } })
+        expect(mockAxios.get).toHaveBeenCalledWith('agents', {
+            params: { uuid: '1' },
+        })
     })
 
     it('should initiate scan by uuid', async () => {
@@ -89,7 +93,24 @@ describe('Agents', () => {
         jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })
         await agents.getAllPackages()
         expect(mockAxios.get).toHaveBeenCalledWith('update/agent/packages', {
-            params: { cursor: null, limit: 100, sortBy: 'createdAt', sortOrder: 'desc' },
+            params: {
+                cursor: null,
+                limit: 100,
+                sortBy: 'createdAt',
+                sortOrder: 'desc',
+            },
+        })
+    })
+
+    it('should get agent applications', async () => {
+        const data = {
+            data: [],
+        }
+
+        jest.spyOn(mockAxios, 'get').mockResolvedValue({ data })
+        await agents.getApplications('1')
+        expect(mockAxios.get).toHaveBeenCalledWith('agents/applications', {
+            params: { ids: '1' },
         })
     })
 

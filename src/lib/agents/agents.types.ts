@@ -127,3 +127,11 @@ export interface Package {
     updatedAt: Date
     version: string
 }
+
+export interface AgentApplication {
+    installedDate: Date
+    name: string
+    publisher: string
+    size: number
+    version: string
+}
