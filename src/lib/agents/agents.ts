@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios'
-import { Agent, Package } from './agents.types'
+import { Agent, AgentApplication, Package } from './agents.types'
 import { paginatedRequest } from '../utils/paginated-request'
 
 export class Agents {
@@ -10,7 +10,9 @@ export class Agents {
     }
 
     async getBySiteId(siteId: string): Promise<Agent[]> {
-        return paginatedRequest(this.httpAgent, 'agents', { params: { siteIds: siteId } })
+        return paginatedRequest(this.httpAgent, 'agents', {
+            params: { siteIds: siteId },
+        })
     }
 
     async getById(id: string): Promise<Agent> {
@@ -27,13 +29,25 @@ export class Agents {
         return res.data[0] as Agent
     }
 
+    async getApplications(id: string): Promise<AgentApplication[]> {
+        const { data: res } = await this.httpAgent.get('agents/applications', {
+            params: { ids: id },
+        })
+
+        return res.data
+    }
+
     async initiateScanByUuid(uuid: string): Promise<any> {
-        const { data: res } = await this.httpAgent.post('agents/scan', { filter: { uuid } })
+        const { data: res } = await this.httpAgent.post('agents/scan', {
+            filter: { uuid },
+        })
         return res.data
     }
 
     async initiateScanById(id: string): Promise<any> {
-        const { data: res } = await this.httpAgent.post('agents/scan', { filter: { ids: [id] } })
+        const { data: res } = await this.httpAgent.post('agents/scan', {
+            filter: { ids: [id] },
+        })
         return res.data
     }
 
