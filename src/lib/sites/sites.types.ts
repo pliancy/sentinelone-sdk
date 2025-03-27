@@ -46,15 +46,15 @@ export interface Setting {
     /**
      * DEPRECATED
      */
-    displayName?: string;
-    groupName: string;
-    setting: string;
+    displayName?: string
+    groupName: string
+    setting: string
     /**
      * DEPRECATED
      */
-    settingGroup?: string;
-    settingGroupDisplayName: string;
-  }
+    settingGroup?: string
+    settingGroupDisplayName: string
+}
 
 export interface Policy {
     agentLoggingOn: boolean

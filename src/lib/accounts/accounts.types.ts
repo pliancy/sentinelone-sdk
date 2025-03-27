@@ -1,4 +1,4 @@
-import { Licenses } from "../sites/sites.types"
+import { Licenses } from '../sites/sites.types'
 
 export interface Account {
     accountType: string
