@@ -1,4 +1,4 @@
-import { License } from '../sites/sites.types'
+import { Licenses } from "../sites/sites.types"
 
 export interface Account {
     accountType: string
@@ -16,7 +16,7 @@ export interface Account {
     externalId: string
     id: string
     isDefault: boolean
-    licenses: License[]
+    licenses: Licenses
     name: string
     numberOfSites: number
     skus: [Object[]]

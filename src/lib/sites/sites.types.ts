@@ -2,7 +2,7 @@ export interface Site {
     id: string
     siteType?: SiteType
     description?: string
-    licenses?: License[]
+    licenses?: Licenses
     expiration?: string
     inherits?: boolean
     unlimitedExpiration?: boolean
@@ -17,20 +17,44 @@ export interface Site {
     sku?: Suite
 }
 
-export interface License {
-    bundles: Bundle[]
+export interface Licenses {
+    bundles?: Bundle[]
+    modules?: Module[]
+    settings?: Setting[]
 }
 
 export interface Bundle {
     name: string
     majorVersion?: number
+    displayName?: string
+    minorVersion?: number
     surfaces?: Surface[]
+}
+
+export interface Module {
+    name: string
+    majorVersion?: number
+    displayName?: string
 }
 
 export interface Surface {
     name: string
     count?: number
 }
+
+export interface Setting {
+    /**
+     * DEPRECATED
+     */
+    displayName?: string;
+    groupName: string;
+    setting: string;
+    /**
+     * DEPRECATED
+     */
+    settingGroup?: string;
+    settingGroupDisplayName: string;
+  }
 
 export interface Policy {
     agentLoggingOn: boolean
