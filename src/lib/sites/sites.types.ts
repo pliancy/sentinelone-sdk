@@ -15,6 +15,7 @@ export interface Site {
     suite: Suite
     totalLicenses?: number
     sku?: Suite
+    registrationToken: string
 }
 
 export interface Licenses {
