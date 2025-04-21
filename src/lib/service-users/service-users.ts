@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios'
-import { ServiceUser } from './service-users.types'
+import { DeleteServiceUserResponse, ServiceUser } from './service-users.types'
 
 export class ServiceUsers {
     constructor(private readonly httpAgent: AxiosInstance) {}
@@ -24,5 +24,12 @@ export class ServiceUsers {
             data,
         })
         return res.data
+    }
+
+    async delete(id: string): Promise<DeleteServiceUserResponse> {
+        const { data: res } = await this.httpAgent.delete<DeleteServiceUserResponse>(
+            `service-users/${id}`,
+        )
+        return res
     }
 }

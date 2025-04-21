@@ -49,4 +49,14 @@ describe('ServiceUsers', () => {
             data: user,
         })
     })
+
+    it('deletes a service user', async () => {
+        const data = {
+            data: user,
+        }
+        jest.spyOn(mockAxios, 'delete').mockResolvedValue({ data })
+        const res = await serviceUsers.delete('123')
+        expect(res).toEqual(data)
+        expect(mockAxios.delete).toHaveBeenCalledWith('service-users/123')
+    })
 })
