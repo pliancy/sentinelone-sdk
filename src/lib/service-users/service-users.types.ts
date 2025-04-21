@@ -9,3 +9,10 @@ export interface ServiceUser {
     scope: 'account'
     scopeRoles: ScopeRole[]
 }
+
+export interface DeleteServiceUserResponse {
+    errors: any[]
+    data: {
+        success: boolean
+    }
+}
