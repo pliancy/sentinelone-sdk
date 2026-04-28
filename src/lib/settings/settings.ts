@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios'
-import { Recipient } from './settings.types'
+import { Recipient, ScanSchedule, VulnerabilityScanPolicy } from './settings.types'
 
 export class Settings {
     constructor(private readonly httpAgent: AxiosInstance) {}
@@ -38,6 +38,37 @@ export class Settings {
 
     async deleteNotificationRecipient(recipientId: string): Promise<void> {
         const { data: res } = await this.httpAgent.delete(`/settings/recipients/${recipientId}`)
+        return res.data
+    }
+
+    async revertSiteVulnerabilityScanningPolicy(siteId: string): Promise<void> {
+        const { data: res } = await this.httpAgent.post('/application-management/settings', {
+            filter: {
+                siteIds: siteId,
+            },
+            data: {
+                isDefaultPolicy: true,
+            },
+        })
+        return res.data
+    }
+
+    async enableSiteVulnerabilityScanning(
+        siteId: string,
+        scanSchedule: ScanSchedule,
+    ): Promise<VulnerabilityScanPolicy> {
+        const { data: res } = await this.httpAgent.post('/application-management/settings', {
+            filter: {
+                siteIds: siteId,
+            },
+            data: {
+                vulnerabilitiesScanEnabled: true,
+                extensiveScanEnabled: true,
+                extensiveLinuxScanEnabled: true,
+                isDefaultPolicy: false,
+                scanSchedule,
+            },
+        })
         return res.data
     }
 }
