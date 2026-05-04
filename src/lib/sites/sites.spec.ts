@@ -117,6 +117,10 @@ describe('Sites', () => {
         const siteId = '456'
         const filter = { siteIds: [siteId] }
 
+        beforeEach(() => {
+            jest.resetAllMocks()
+        })
+
         it('adds and removes modules, returning affected counts', async () => {
             const modules: UpdateSiteModulesRequest[] = [
                 { name: 'moduleA', operation: 'add' },
@@ -131,11 +135,11 @@ describe('Sites', () => {
 
             expect(res).toEqual({ added: 1, removed: 1, errors: [] })
             expect(mockAxios.put).toHaveBeenNthCalledWith(1, 'licenses/update-sites-modules', {
-                data: { operation: 'add', modules: [{ name: 'moduleA' }] },
+                data: { operation: 'add', modules: [{ name: 'moduleA', operation: 'add' }] },
                 filter,
             })
             expect(mockAxios.put).toHaveBeenNthCalledWith(2, 'licenses/update-sites-modules', {
-                data: { operation: 'remove', modules: [{ name: 'moduleB' }] },
+                data: { operation: 'remove', modules: [{ name: 'moduleB', operation: 'remove' }] },
                 filter,
             })
         })
@@ -154,7 +158,13 @@ describe('Sites', () => {
 
             expect(res).toEqual({ added: 2, removed: 0, errors: [] })
             expect(mockAxios.put).toHaveBeenNthCalledWith(1, 'licenses/update-sites-modules', {
-                data: { operation: 'add', modules: [{ name: 'moduleA' }, { name: 'moduleB' }] },
+                data: {
+                    operation: 'add',
+                    modules: [
+                        { name: 'moduleA', operation: 'add' },
+                        { name: 'moduleB', operation: 'add' },
+                    ],
+                },
                 filter,
             })
         })
@@ -162,15 +172,16 @@ describe('Sites', () => {
         it('handles remove-only modules', async () => {
             const modules: UpdateSiteModulesRequest[] = [{ name: 'moduleC', operation: 'remove' }]
 
-            jest.spyOn(mockAxios, 'put')
-                .mockResolvedValueOnce({ data: { data: { affected: 0 }, errors: [] } })
-                .mockResolvedValueOnce({ data: { data: { affected: 1 }, errors: [] } })
+            jest.spyOn(mockAxios, 'put').mockResolvedValueOnce({
+                data: { data: { affected: 1 }, errors: [] },
+            })
 
             const res = await sites.updateSiteModules(siteId, modules)
 
             expect(res).toEqual({ added: 0, removed: 1, errors: [] })
-            expect(mockAxios.put).toHaveBeenNthCalledWith(2, 'licenses/update-sites-modules', {
-                data: { operation: 'remove', modules: [{ name: 'moduleC' }] },
+            expect(mockAxios.put).toHaveBeenCalledTimes(1)
+            expect(mockAxios.put).toHaveBeenCalledWith('licenses/update-sites-modules', {
+                data: { operation: 'remove', modules: [{ name: 'moduleC', operation: 'remove' }] },
                 filter,
             })
         })
@@ -196,6 +207,7 @@ describe('Sites', () => {
             expect(res.errors).toEqual([addError, removeError])
             expect(res.added).toBe(0)
             expect(res.removed).toBe(0)
+            expect(mockAxios.put).toHaveBeenCalledTimes(2)
         })
     })
 })

@@ -65,36 +65,43 @@ export class Sites {
         const add = modules.filter((m) => m.operation === 'add')
         const remove = modules.filter((m) => m.operation === 'remove')
         const res: UpdateSiteModulesResponse = { added: 0, removed: 0, errors: [] }
-        const filter = { siteIds: [id] }
-        const { data: addRes } = await this.httpAgent.put<{
-            data: { affected: number }
-            errors: S1ApiError[]
-        }>(`licenses/update-sites-modules`, {
-            data: {
-                operation: 'add',
-                modules: add.map((m) => ({ name: m.name })),
-            },
-            filter,
-        })
-        res.added = addRes.data?.affected
-        if (addRes.errors.length) res.errors.push(...addRes.errors)
-        const { data: removeRes } = await this.httpAgent.put<{
-            data: { affected: number }
-            errors: S1ApiError[]
-        }>(`licenses/update-sites-modules`, {
-            data: {
-                operation: 'remove',
-                modules: remove.map((m) => ({ name: m.name })),
-            },
-            filter,
-        })
-        res.removed = removeRes.data?.affected
-        if (removeRes.errors.length) res.errors.push(...removeRes.errors)
+
+        if (add.length) {
+            const addRes = await this.addOrRemoveSiteModules(id, add, 'add')
+            res.added = addRes.data?.affected ?? 0
+            if (addRes.errors.length) res.errors.push(...addRes.errors)
+        }
+
+        if (remove.length) {
+            const removeRes = await this.addOrRemoveSiteModules(id, remove, 'remove')
+            res.removed = removeRes.data?.affected ?? 0
+            if (removeRes.errors.length) res.errors.push(...removeRes.errors)
+        }
+
         return res
     }
 
     async delete(id: string): Promise<void> {
         const { data: res } = await this.httpAgent.delete(`sites/${id}`)
         return res.data
+    }
+
+    private async addOrRemoveSiteModules(
+        siteId: string,
+        modules: UpdateSiteModulesRequest[],
+        operation: 'add' | 'remove',
+    ) {
+        const { data: addRes } = await this.httpAgent.put<{
+            data: { affected: number }
+            errors: S1ApiError[]
+        }>(`licenses/update-sites-modules`, {
+            data: {
+                operation,
+                modules,
+            },
+            filter: { siteIds: [siteId] },
+        })
+
+        return addRes
     }
 }
