@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios'
 import { paginatedRequest } from '../utils/paginated-request'
-import { Site } from './sites.types'
+import { Site, UpdateSiteModulesRequest, UpdateSiteModulesResponse } from './sites.types'
+import { S1ApiError } from '../sentinel-one.types'
 
 export class Sites {
     constructor(private readonly httpAgent: AxiosInstance) {}
@@ -57,8 +58,50 @@ export class Sites {
         return res.data
     }
 
+    async updateSiteModules(
+        id: string,
+        modules: UpdateSiteModulesRequest[],
+    ): Promise<UpdateSiteModulesResponse> {
+        const add = modules.filter((m) => m.operation === 'add')
+        const remove = modules.filter((m) => m.operation === 'remove')
+        const res: UpdateSiteModulesResponse = { added: 0, removed: 0, errors: [] }
+
+        if (add.length) {
+            const addRes = await this.addOrRemoveSiteModules(id, add, 'add')
+            res.added = addRes.data?.affected ?? 0
+            if (addRes.errors.length) res.errors.push(...addRes.errors)
+        }
+
+        if (remove.length) {
+            const removeRes = await this.addOrRemoveSiteModules(id, remove, 'remove')
+            res.removed = removeRes.data?.affected ?? 0
+            if (removeRes.errors.length) res.errors.push(...removeRes.errors)
+        }
+
+        return res
+    }
+
     async delete(id: string): Promise<void> {
         const { data: res } = await this.httpAgent.delete(`sites/${id}`)
         return res.data
+    }
+
+    private async addOrRemoveSiteModules(
+        siteId: string,
+        modules: UpdateSiteModulesRequest[],
+        operation: 'add' | 'remove',
+    ) {
+        const { data: addRes } = await this.httpAgent.put<{
+            data: { affected: number }
+            errors: S1ApiError[]
+        }>(`licenses/update-sites-modules`, {
+            data: {
+                operation,
+                modules,
+            },
+            filter: { siteIds: [siteId] },
+        })
+
+        return addRes
     }
 }

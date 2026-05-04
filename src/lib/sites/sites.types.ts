@@ -1,3 +1,5 @@
+import { S1ApiError } from '../sentinel-one.types'
+
 export interface Site {
     id: string
     siteType?: SiteType
@@ -36,6 +38,17 @@ export interface Module {
     name: string
     majorVersion?: number
     displayName?: string
+}
+
+export interface UpdateSiteModulesRequest {
+    name: string
+    operation: 'add' | 'remove'
+}
+
+export interface UpdateSiteModulesResponse {
+    added: number
+    removed: number
+    errors: S1ApiError[]
 }
 
 export interface Surface {
