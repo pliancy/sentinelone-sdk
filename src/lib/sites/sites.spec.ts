@@ -1,7 +1,7 @@
 import mockAxios from 'jest-mock-axios'
 import { Sites } from './sites'
 import { AxiosInstance } from 'axios'
-import { Site } from './sites.types'
+import { Site, UpdateSiteModulesRequest } from './sites.types'
 
 describe('Sites', () => {
     let sites: Sites
@@ -111,5 +111,91 @@ describe('Sites', () => {
         jest.spyOn(mockAxios, 'delete').mockResolvedValue({ data: {} })
         await sites.delete('123')
         expect(mockAxios.delete).toHaveBeenCalledWith('sites/123')
+    })
+
+    describe('updateSiteModules', () => {
+        const siteId = '456'
+        const filter = { siteIds: [siteId] }
+
+        it('adds and removes modules, returning affected counts', async () => {
+            const modules: UpdateSiteModulesRequest[] = [
+                { name: 'moduleA', operation: 'add' },
+                { name: 'moduleB', operation: 'remove' },
+            ]
+
+            jest.spyOn(mockAxios, 'put')
+                .mockResolvedValueOnce({ data: { data: { affected: 1 }, errors: [] } })
+                .mockResolvedValueOnce({ data: { data: { affected: 1 }, errors: [] } })
+
+            const res = await sites.updateSiteModules(siteId, modules)
+
+            expect(res).toEqual({ added: 1, removed: 1, errors: [] })
+            expect(mockAxios.put).toHaveBeenNthCalledWith(1, 'licenses/update-sites-modules', {
+                data: { operation: 'add', modules: [{ name: 'moduleA' }] },
+                filter,
+            })
+            expect(mockAxios.put).toHaveBeenNthCalledWith(2, 'licenses/update-sites-modules', {
+                data: { operation: 'remove', modules: [{ name: 'moduleB' }] },
+                filter,
+            })
+        })
+
+        it('handles add-only modules', async () => {
+            const modules: UpdateSiteModulesRequest[] = [
+                { name: 'moduleA', operation: 'add' },
+                { name: 'moduleB', operation: 'add' },
+            ]
+
+            jest.spyOn(mockAxios, 'put')
+                .mockResolvedValueOnce({ data: { data: { affected: 2 }, errors: [] } })
+                .mockResolvedValueOnce({ data: { data: { affected: 0 }, errors: [] } })
+
+            const res = await sites.updateSiteModules(siteId, modules)
+
+            expect(res).toEqual({ added: 2, removed: 0, errors: [] })
+            expect(mockAxios.put).toHaveBeenNthCalledWith(1, 'licenses/update-sites-modules', {
+                data: { operation: 'add', modules: [{ name: 'moduleA' }, { name: 'moduleB' }] },
+                filter,
+            })
+        })
+
+        it('handles remove-only modules', async () => {
+            const modules: UpdateSiteModulesRequest[] = [{ name: 'moduleC', operation: 'remove' }]
+
+            jest.spyOn(mockAxios, 'put')
+                .mockResolvedValueOnce({ data: { data: { affected: 0 }, errors: [] } })
+                .mockResolvedValueOnce({ data: { data: { affected: 1 }, errors: [] } })
+
+            const res = await sites.updateSiteModules(siteId, modules)
+
+            expect(res).toEqual({ added: 0, removed: 1, errors: [] })
+            expect(mockAxios.put).toHaveBeenNthCalledWith(2, 'licenses/update-sites-modules', {
+                data: { operation: 'remove', modules: [{ name: 'moduleC' }] },
+                filter,
+            })
+        })
+
+        it('collects errors from add and remove responses', async () => {
+            const modules: UpdateSiteModulesRequest[] = [
+                { name: 'moduleA', operation: 'add' },
+                { name: 'moduleB', operation: 'remove' },
+            ]
+            const addError = { code: 'ERR_ADD', detail: 'add failed', title: 'Add Error' }
+            const removeError = {
+                code: 'ERR_REMOVE',
+                detail: 'remove failed',
+                title: 'Remove Error',
+            }
+
+            jest.spyOn(mockAxios, 'put')
+                .mockResolvedValueOnce({ data: { data: { affected: 0 }, errors: [addError] } })
+                .mockResolvedValueOnce({ data: { data: { affected: 0 }, errors: [removeError] } })
+
+            const res = await sites.updateSiteModules(siteId, modules)
+
+            expect(res.errors).toEqual([addError, removeError])
+            expect(res.added).toBe(0)
+            expect(res.removed).toBe(0)
+        })
     })
 })
