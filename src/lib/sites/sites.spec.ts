@@ -135,11 +135,32 @@ describe('Sites', () => {
 
             expect(res).toEqual({ added: 1, removed: 1, errors: [] })
             expect(mockAxios.put).toHaveBeenNthCalledWith(1, 'licenses/update-sites-modules', {
-                data: { operation: 'add', modules: [{ name: 'moduleA', operation: 'add' }] },
+                data: { operation: 'add', modules: [{ name: 'moduleA' }] },
                 filter,
             })
             expect(mockAxios.put).toHaveBeenNthCalledWith(2, 'licenses/update-sites-modules', {
-                data: { operation: 'remove', modules: [{ name: 'moduleB', operation: 'remove' }] },
+                data: { operation: 'remove', modules: [{ name: 'moduleB' }] },
+                filter,
+            })
+        })
+
+        it('strips extra fields from modules, sending only name to the API', async () => {
+            const modules: UpdateSiteModulesRequest[] = [
+                { name: 'moduleA', operation: 'add' },
+                { name: 'moduleB', operation: 'add' },
+            ]
+
+            jest.spyOn(mockAxios, 'put').mockResolvedValueOnce({
+                data: { data: { affected: 2 }, errors: [] },
+            })
+
+            await sites.updateSiteModules(siteId, modules)
+
+            expect(mockAxios.put).toHaveBeenCalledWith('licenses/update-sites-modules', {
+                data: {
+                    operation: 'add',
+                    modules: [{ name: 'moduleA' }, { name: 'moduleB' }],
+                },
                 filter,
             })
         })
@@ -150,20 +171,18 @@ describe('Sites', () => {
                 { name: 'moduleB', operation: 'add' },
             ]
 
-            jest.spyOn(mockAxios, 'put')
-                .mockResolvedValueOnce({ data: { data: { affected: 2 }, errors: [] } })
-                .mockResolvedValueOnce({ data: { data: { affected: 0 }, errors: [] } })
+            jest.spyOn(mockAxios, 'put').mockResolvedValueOnce({
+                data: { data: { affected: 2 }, errors: [] },
+            })
 
             const res = await sites.updateSiteModules(siteId, modules)
 
             expect(res).toEqual({ added: 2, removed: 0, errors: [] })
-            expect(mockAxios.put).toHaveBeenNthCalledWith(1, 'licenses/update-sites-modules', {
+            expect(mockAxios.put).toHaveBeenCalledTimes(1)
+            expect(mockAxios.put).toHaveBeenCalledWith('licenses/update-sites-modules', {
                 data: {
                     operation: 'add',
-                    modules: [
-                        { name: 'moduleA', operation: 'add' },
-                        { name: 'moduleB', operation: 'add' },
-                    ],
+                    modules: [{ name: 'moduleA' }, { name: 'moduleB' }],
                 },
                 filter,
             })
@@ -181,7 +200,7 @@ describe('Sites', () => {
             expect(res).toEqual({ added: 0, removed: 1, errors: [] })
             expect(mockAxios.put).toHaveBeenCalledTimes(1)
             expect(mockAxios.put).toHaveBeenCalledWith('licenses/update-sites-modules', {
-                data: { operation: 'remove', modules: [{ name: 'moduleC', operation: 'remove' }] },
+                data: { operation: 'remove', modules: [{ name: 'moduleC' }] },
                 filter,
             })
         })
@@ -208,6 +227,28 @@ describe('Sites', () => {
             expect(res.added).toBe(0)
             expect(res.removed).toBe(0)
             expect(mockAxios.put).toHaveBeenCalledTimes(2)
+        })
+
+        it('does not throw when the API response has no errors field', async () => {
+            const modules: UpdateSiteModulesRequest[] = [
+                { name: 'moduleA', operation: 'add' },
+                { name: 'moduleB', operation: 'remove' },
+            ]
+
+            jest.spyOn(mockAxios, 'put')
+                .mockResolvedValueOnce({ data: { data: { affected: 1 } } })
+                .mockResolvedValueOnce({ data: { data: { affected: 1 } } })
+
+            const res = await sites.updateSiteModules(siteId, modules)
+
+            expect(res).toEqual({ added: 1, removed: 1, errors: [] })
+        })
+
+        it('returns zeros and empty errors when given an empty modules list', async () => {
+            const res = await sites.updateSiteModules(siteId, [])
+
+            expect(res).toEqual({ added: 0, removed: 0, errors: [] })
+            expect(mockAxios.put).not.toHaveBeenCalled()
         })
     })
 })

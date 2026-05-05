@@ -69,13 +69,13 @@ export class Sites {
         if (add.length) {
             const addRes = await this.addOrRemoveSiteModules(id, add, 'add')
             res.added = addRes.data?.affected ?? 0
-            if (addRes.errors.length) res.errors.push(...addRes.errors)
+            if (addRes?.errors?.length) res.errors.push(...addRes.errors)
         }
 
         if (remove.length) {
             const removeRes = await this.addOrRemoveSiteModules(id, remove, 'remove')
             res.removed = removeRes.data?.affected ?? 0
-            if (removeRes.errors.length) res.errors.push(...removeRes.errors)
+            if (removeRes?.errors?.length) res.errors.push(...removeRes.errors)
         }
 
         return res
@@ -97,7 +97,7 @@ export class Sites {
         }>(`licenses/update-sites-modules`, {
             data: {
                 operation,
-                modules,
+                modules: modules.map((m) => ({ name: m.name })),
             },
             filter: { siteIds: [siteId] },
         })
