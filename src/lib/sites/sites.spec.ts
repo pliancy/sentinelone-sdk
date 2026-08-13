@@ -107,6 +107,18 @@ describe('Sites', () => {
         expect(mockAxios.put).toHaveBeenCalledWith('sites/123', { data: site })
     })
 
+    it('regenerates a site key', async () => {
+        const registrationToken =
+            'eyJ1cmwiOiAiaHR0cHM6Ly9jb25zb2xlLnNlbnRpbmVsb25lLm5ldCIsICJzaXRlX2tleSI6ICIwNzhkYjliMWUyOTA1Y2NhIn0='
+        const data = {
+            data: { registrationToken },
+        }
+        jest.spyOn(mockAxios, 'put').mockResolvedValue({ data })
+        const res = await sites.regenerateKey('123')
+        expect(res).toEqual({ registrationToken })
+        expect(mockAxios.put).toHaveBeenCalledWith('sites/123/regenerate-key')
+    })
+
     it('deletes a site', async () => {
         jest.spyOn(mockAxios, 'delete').mockResolvedValue({ data: {} })
         await sites.delete('123')

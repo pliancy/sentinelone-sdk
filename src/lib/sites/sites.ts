@@ -1,6 +1,11 @@
 import { AxiosInstance } from 'axios'
 import { paginatedRequest } from '../utils/paginated-request'
-import { Site, UpdateSiteModulesRequest, UpdateSiteModulesResponse } from './sites.types'
+import {
+    RegenerateSiteKeyResponse,
+    Site,
+    UpdateSiteModulesRequest,
+    UpdateSiteModulesResponse,
+} from './sites.types'
 import { S1ApiError } from '../sentinel-one.types'
 
 export class Sites {
@@ -55,6 +60,11 @@ export class Sites {
 
     async update(id: string, data: Partial<Site>): Promise<Site> {
         const { data: res } = await this.httpAgent.put(`sites/${id}`, { data })
+        return res.data
+    }
+
+    async regenerateKey(id: string): Promise<RegenerateSiteKeyResponse> {
+        const { data: res } = await this.httpAgent.put(`sites/${id}/regenerate-key`)
         return res.data
     }
 
