@@ -51,6 +51,10 @@ export interface UpdateSiteModulesResponse {
     errors: S1ApiError[]
 }
 
+export interface RegenerateSiteKeyResponse {
+    registrationToken: string
+}
+
 export interface Surface {
     name: string
     count?: number
