@@ -10,7 +10,7 @@
     }
   },
   "dependencies": {
-    "axios": "1.17.0",
+    "axios": "1.19.0",
     "tslib": "2.8.1"
   },
   "description": "A TypeScript SDK for the SentinelOne API",
@@ -25,7 +25,7 @@
     "cpy-cli": "5.0.0",
     "husky": "9.1.7",
     "jest": "29.7.0",
-    "jest-mock-axios": "4.8.0",
+    "jest-mock-axios": "4.9.0",
     "open-cli": "8.0.0",
     "pinst": "3.0.0",
     "rimraf": "6.0.1",
